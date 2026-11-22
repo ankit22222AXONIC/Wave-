@@ -13,25 +13,26 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-screen bg-[#09090B] flex items-center justify-center p-4 sm:p-6 select-none overflow-y-auto">
-      {/* Background Motion Video */}
+    <div className="relative min-h-screen w-screen bg-black flex items-center justify-center p-4 sm:p-6 select-none overflow-y-auto">
+      {/* Background Motion Video (Full clarity & sharpness) */}
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-40"
+        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none"
       >
         <source src="/login-bg.mp4" type="video/mp4" />
       </video>
 
-      {/* Dark gradient overlay for contrast */}
-      <div className="fixed inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-[1] pointer-events-none backdrop-blur-[1px]" />
+      {/* Subtle tint to keep full video brightness while ensuring text readability */}
+      <div className="fixed inset-0 bg-black/25 z-[1] pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-[390px] flex flex-col items-center text-center py-8">
+      {/* Glass card container */}
+      <div className="relative z-10 w-full max-w-[420px] flex flex-col items-center text-center p-8 sm:p-10 rounded-3xl bg-black/55 backdrop-blur-xl border border-white/15 shadow-2xl my-8">
         {/* Wave Brand Logo */}
         <div className="mb-6 flex items-center justify-center">
-          <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-black shadow-lg shadow-white/10">
+          <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-black shadow-lg shadow-white/20">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 10v4" />
               <path d="M6 7v10" />
@@ -47,7 +48,8 @@ export const LoginPage: React.FC = () => {
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
           Welcome back
         </h1>
-        <p className="text-sm font-medium text-[#A1A1AA] mb-8">
+        {/* Subtitle - Bigger & Clearer */}
+        <p className="text-xl sm:text-2xl font-bold text-white/95 mb-8 tracking-tight">
           Choose a login method
         </p>
 
