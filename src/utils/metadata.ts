@@ -167,9 +167,13 @@ function parseID3v2(buffer: ArrayBuffer): { title?: string; artist?: string; alb
         p++; // skip description null terminator
         if (p < frameData.length && frameData[p] === 0) p++; // extra null for utf-16
 
+        // Validate against safe image MIME types only
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+        const safeMime = allowedMimes.includes(mime.toLowerCase()) ? mime.toLowerCase() : 'image/jpeg';
+
         if (p < frameData.length) {
           const imgBytes = frameData.slice(p);
-          result.coverBlob = new Blob([imgBytes], { type: mime });
+          result.coverBlob = new Blob([imgBytes], { type: safeMime });
         }
       } catch (err) {
         console.warn('Could not parse APIC cover:', err);

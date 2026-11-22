@@ -40,20 +40,21 @@ const MainAppContent: React.FC = () => {
   }>({ isOpen: false, isEdit: false });
 
   const { currentSong } = usePlayer();
+  const { user } = useAuth();
 
-  // Load songs & playlists from IndexedDB
+  // Load songs & playlists from IndexedDB scoped to authenticated user
   const refreshData = useCallback(async () => {
     try {
       const [fetchedSongs, fetchedPlaylists] = await Promise.all([
-        getAllSongs(),
-        getAllPlaylists()
+        getAllSongs(user?.uid),
+        getAllPlaylists(user?.uid)
       ]);
       setSongs(fetchedSongs);
       setPlaylists(fetchedPlaylists);
     } catch (err) {
       console.error('Failed to load data from IndexedDB:', err);
     }
-  }, []);
+  }, [user?.uid]);
 
   useEffect(() => {
     refreshData();
@@ -112,7 +113,7 @@ const MainAppContent: React.FC = () => {
           )
         );
       } else {
-        const newPl = await createPlaylist(name, description);
+        const newPl = await createPlaylist(name, description, user?.uid);
         setPlaylists(prev => [...prev, newPl]);
         setActivePage({ type: 'playlist', playlistId: newPl.id });
       }
@@ -289,6 +290,7 @@ const MainAppContent: React.FC = () => {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onUploadSuccess={handleUploadSuccess}
+        userId={user?.uid}
       />
 
       {/* Add to Playlist Modal */}
@@ -298,7 +300,7 @@ const MainAppContent: React.FC = () => {
         onClose={() => setSongToAddToPlaylist(null)}
         onToggleInPlaylist={handleToggleInPlaylist}
         onCreateNewPlaylist={async (name) => {
-          const newPl = await createPlaylist(name);
+          const newPl = await createPlaylist(name, '', user?.uid);
           setPlaylists(prev => [...prev, newPl]);
           if (songToAddToPlaylist) {
             await handleAddSongToPlaylist(newPl.id, songToAddToPlaylist.id);

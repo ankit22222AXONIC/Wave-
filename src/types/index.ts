@@ -1,5 +1,6 @@
 export interface Song {
   id: string;
+  userId?: string;
   title: string;
   artist: string;
   album?: string;
@@ -15,6 +16,7 @@ export interface Song {
 
 export interface Playlist {
   id: string;
+  userId?: string;
   name: string;
   description?: string;
   createdAt: number;

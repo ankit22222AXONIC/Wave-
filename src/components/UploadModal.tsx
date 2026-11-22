@@ -16,7 +16,11 @@ interface UploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUploadSuccess: (newSongs: Song[]) => void;
+  userId?: string;
 }
+
+const MAX_FILE_SIZE_BYTES = 60 * 1024 * 1024; // 60MB limit per track
+const MAX_BATCH_FILES = 20; // 20 files per batch
 
 interface PendingTrack {
   id: string;
@@ -33,12 +37,14 @@ interface PendingTrack {
 export const UploadModal: React.FC<UploadModalProps> = ({
   isOpen,
   onClose,
-  onUploadSuccess
+  onUploadSuccess,
+  userId
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [pendingTracks, setPendingTracks] = useState<PendingTrack[]>([]);
+  const [uploadWarning, setUploadWarning] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   if (!isOpen) return null;
@@ -68,14 +74,36 @@ export const UploadModal: React.FC<UploadModalProps> = ({
   };
 
   const processFiles = async (files: File[]) => {
+    setUploadWarning(null);
     const validExtensions = ['mp3', 'wav', 'm4a', 'ogg', 'flac'];
-    const audioFiles = files.filter(f => {
+    
+    if (files.length > MAX_BATCH_FILES) {
+      setUploadWarning(`Batch limit exceeded. Processing the first ${MAX_BATCH_FILES} files.`);
+      files = files.slice(0, MAX_BATCH_FILES);
+    }
+
+    const audioFiles: File[] = [];
+    const oversizedFiles: string[] = [];
+
+    for (const f of files) {
       const ext = f.name.split('.').pop()?.toLowerCase();
-      return ext && validExtensions.includes(ext);
-    });
+      if (!ext || !validExtensions.includes(ext)) continue;
+
+      if (f.size > MAX_FILE_SIZE_BYTES) {
+        oversizedFiles.push(`${f.name} (${Math.round(f.size / 1024 / 1024)}MB)`);
+      } else {
+        audioFiles.push(f);
+      }
+    }
+
+    if (oversizedFiles.length > 0) {
+      setUploadWarning(`Skipped files over 60MB limit: ${oversizedFiles.join(', ')}`);
+    }
 
     if (audioFiles.length === 0) {
-      alert('Please select audio files (.mp3, .wav, .m4a, .ogg, .flac)');
+      if (oversizedFiles.length === 0) {
+        alert('Please select audio files (.mp3, .wav, .m4a, .ogg, .flac)');
+      }
       return;
     }
 
@@ -153,6 +181,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
     try {
       const finalSongs: Song[] = pendingTracks.map(t => ({
         id: t.id,
+        userId: userId || undefined,
         title: t.title.trim() || 'Untitled Track',
         artist: t.artist.trim() || 'Unknown Artist',
         duration: t.duration,
@@ -213,6 +242,11 @@ export const UploadModal: React.FC<UploadModalProps> = ({
 
         {/* Modal Body */}
         <div className="p-6 flex flex-col gap-5 overflow-y-auto flex-1">
+          {uploadWarning && (
+            <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs rounded-lg">
+              {uploadWarning}
+            </div>
+          )}
           {/* Dropzone */}
           <div
             onDragOver={handleDragOver}

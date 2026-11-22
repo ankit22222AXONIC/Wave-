@@ -11,14 +11,20 @@ export class WaveDatabase extends Dexie {
       songs: 'id, title, artist, album, dateAdded, isLiked',
       playlists: 'id, name, createdAt'
     });
+    this.version(2).stores({
+      songs: 'id, userId, title, artist, album, dateAdded, isLiked',
+      playlists: 'id, userId, name, createdAt'
+    });
   }
 }
 
 export const db = new WaveDatabase();
 
-// DB Helper functions
-export async function getAllSongs(): Promise<Song[]> {
-  return await db.songs.orderBy('dateAdded').reverse().toArray();
+// DB Helper functions scoped by userId for privacy and isolation
+export async function getAllSongs(userId?: string): Promise<Song[]> {
+  const songs = await db.songs.orderBy('dateAdded').reverse().toArray();
+  if (!userId) return songs;
+  return songs.filter(s => !s.userId || s.userId === userId);
 }
 
 export async function getSongById(id: string): Promise<Song | undefined> {
@@ -54,13 +60,16 @@ export async function toggleSongLike(id: string): Promise<boolean> {
   return newLiked;
 }
 
-export async function getAllPlaylists(): Promise<Playlist[]> {
-  return await db.playlists.orderBy('createdAt').toArray();
+export async function getAllPlaylists(userId?: string): Promise<Playlist[]> {
+  const playlists = await db.playlists.orderBy('createdAt').toArray();
+  if (!userId) return playlists;
+  return playlists.filter(pl => !pl.userId || pl.userId === userId);
 }
 
-export async function createPlaylist(name: string, description: string = ''): Promise<Playlist> {
+export async function createPlaylist(name: string, description: string = '', userId?: string): Promise<Playlist> {
   const newPl: Playlist = {
     id: 'pl_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    userId: userId || undefined,
     name: name.trim() || 'Untitled Playlist',
     description: description.trim(),
     createdAt: Date.now(),
