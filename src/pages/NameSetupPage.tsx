@@ -18,12 +18,25 @@ export const NameSetupPage: React.FC = () => {
   return (
     <div className="min-h-screen w-screen bg-[#09090B] flex items-center justify-center p-4 select-none">
       <div className="w-full max-w-md bg-[#121215] border border-[#27272A] rounded-2xl p-8 sm:p-10 shadow-2xl flex flex-col items-center text-center">
-        {/* User Icon Avatar */}
-        <div className="w-14 h-14 rounded-full bg-[#1C1C21] border border-[#27272A] flex items-center justify-center text-white mb-5 shadow-sm">
+        {/* Wave Logo */}
+        <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-black mb-2 shadow-sm">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 10v4" />
+            <path d="M6 7v10" />
+            <path d="M10 3v18" />
+            <path d="M14 6v12" />
+            <path d="M18 8v8" />
+            <path d="M22 10v4" />
+          </svg>
+        </div>
+
+        {/* User Avatar */}
+        <div className="w-14 h-14 rounded-full bg-[#1C1C21] border-2 border-[#27272A] overflow-hidden flex items-center justify-center mb-5 shadow-sm">
           {user?.photoURL ? (
             <img 
               src={user.photoURL} 
               alt="Google avatar" 
+              referrerPolicy="no-referrer"
               className="w-full h-full rounded-full object-cover"
             />
           ) : (
