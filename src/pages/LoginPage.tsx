@@ -4,23 +4,11 @@ import { useAuth } from '../context/AuthContext';
 
 export const LoginPage: React.FC = () => {
   const { signInWithGoogle, error, isFirebaseConfigured } = useAuth();
-  const [email, setEmail] = useState('');
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
-
-  const handleContinueWithEmail = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) {
-      setInfoMessage('Please enter your email or continue with Google below.');
-      return;
-    }
-    setInfoMessage(
-      `Please use "Continue with Google" below to access your account for ${email.trim()}.`
-    );
-  };
 
   const handleUnsupportedProvider = (providerName: string) => {
     setInfoMessage(
-      `${providerName} is not yet enabled for this workspace. Please click "Continue with Google" to sign in.`
+      `${providerName} is coming soon. Please click "Continue with Google" to sign in.`
     );
   };
 
@@ -70,45 +58,7 @@ export const LoginPage: React.FC = () => {
           </div>
         )}
 
-        {/* Email form */}
-        <form onSubmit={(e) => e.preventDefault()} className="w-full flex flex-col gap-3 text-left opacity-80">
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-bold text-white/70 line-through decoration-white decoration-2">
-                Email
-              </label>
-              <span className="text-[10px] font-semibold uppercase tracking-wider bg-white/10 text-white/90 border border-white/20 px-2 py-0.5 rounded-full">
-                Coming Soon
-              </span>
-            </div>
-            <input
-              type="email"
-              disabled
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
-              className="w-full h-12 px-3.5 bg-[#121212] border border-[#727272]/40 rounded-md text-white/50 text-sm outline-none cursor-not-allowed"
-            />
-          </div>
-
-          <button
-            type="button"
-            disabled
-            className="w-full h-12 mt-1 rounded-full bg-[#1ed760]/50 text-black/70 font-bold text-sm flex items-center justify-center gap-2 cursor-not-allowed shadow-none"
-          >
-            <span className="line-through decoration-white decoration-2">Continue</span>
-            <span className="text-[10px] uppercase font-bold tracking-wider bg-black/20 text-black px-2 py-0.5 rounded-full">
-              Coming Soon
-            </span>
-          </button>
-        </form>
-
-        {/* "or" text */}
-        <div className="relative w-full my-6 flex items-center justify-center">
-          <span className="text-xs font-medium text-[#a7a7a7]">or</span>
-        </div>
-
-        {/* 4 Rounded Pill Buttons */}
+        {/* Options */}
         <div className="w-full flex flex-col gap-3">
           {/* 1. Phone number (Cut with white line + Coming Soon) */}
           <div
