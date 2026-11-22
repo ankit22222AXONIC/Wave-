@@ -13,8 +13,22 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-[#121212] flex items-center justify-center p-4 sm:p-6 select-none overflow-y-auto">
-      <div className="w-full max-w-[390px] flex flex-col items-center text-center py-8">
+    <div className="relative min-h-screen w-screen bg-[#09090B] flex items-center justify-center p-4 sm:p-6 select-none overflow-y-auto">
+      {/* Background Motion Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-40"
+      >
+        <source src="/login-bg.mp4" type="video/mp4" />
+      </video>
+
+      {/* Dark gradient overlay for contrast */}
+      <div className="fixed inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-[1] pointer-events-none backdrop-blur-[1px]" />
+
+      <div className="relative z-10 w-full max-w-[390px] flex flex-col items-center text-center py-8">
         {/* Wave Brand Logo */}
         <div className="mb-6 flex items-center justify-center">
           <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-black shadow-lg shadow-white/10">
@@ -30,9 +44,12 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Big Bold Headline */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-8">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
           Welcome back
         </h1>
+        <p className="text-sm font-medium text-[#A1A1AA] mb-8">
+          Choose a login method
+        </p>
 
         {/* Feedback / Error notifications */}
         {error && (
