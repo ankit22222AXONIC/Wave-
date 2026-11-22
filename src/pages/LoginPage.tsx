@@ -30,10 +30,10 @@ export const LoginPage: React.FC = () => {
 
       {/* Transparent seamless container (no box/card) */}
       <div className="relative z-10 w-full max-w-[440px] flex flex-col items-center text-center py-10 px-4">
-        {/* Wave Brand Logo */}
-        <div className="mb-6 flex items-center justify-center">
-          <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-black shadow-xl">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        {/* Wave Brand Logo - Prominent & Bigger */}
+        <div className="mb-7 flex items-center justify-center">
+          <div className="w-20 h-20 rounded-3xl bg-white flex items-center justify-center text-black shadow-2xl shadow-white/20 hover:scale-105 transition-transform">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M2 10v4" />
               <path d="M6 7v10" />
               <path d="M10 3v18" />
